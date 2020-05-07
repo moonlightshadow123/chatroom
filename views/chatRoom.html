@@ -20,7 +20,6 @@
         console.log(umap);
         console.log(window.stamp);
     </script>
-    <script src="/static/js/chatRoom.js"></script>
 </head>
 <body>
     <div class="box">
@@ -57,17 +56,27 @@
     <!-- message area end -->
     
     <div class="therow footer">
-        <div class="input-footer">
-            <div class="username" >
+        <div class="input-footer row">
+            <div class="username col-1" >
                 <span id="name">{{.name}}</span>
             </div>
-            <div class="input" >
+            <div class="input col-7" >
                     <input class="form-control" id="inputArea" type="text" placeholder="Type your message..."/>
             </div>
-            <button id="sendBtn" class="btn btn-primary button">Send</button>
+            <div class="input col-2">
+                <form id="fileForm"  action="/upload" method="POST" target="dummyframe" enctype="multipart/form-data">
+                    <input id="fileInput" type="file" name="file">
+                    <input type="hidden" name="name" value="{{.name}}">
+                </form>
+            </div>
+            <div class="col-1">
+                <button id="sendBtn" class="btn btn-primary button">Send</button>
+            </div>
         </div>
     </div>
 </div>
+<iframe name="dummyframe" id="dummyframe" style="display: none;"></iframe>
+<script src="/static/js/chatRoom.js"></script>
     <!-- inputMessage Area end -->
 </body>
 </html>

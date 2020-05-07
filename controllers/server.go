@@ -87,6 +87,7 @@ func (c *ServerController)Get(){
 }
 
 func (c *ServerController)Logout(){
+	//c.GetSecureCookie(secret, "username") 
 	c.SetSecureCookie(secret, "username", "")
 	c.Redirect("/", 302)
 }
@@ -154,9 +155,27 @@ func (c *ServerController) WS() {
 		if err == nil{
 			man.Msgs <- msg
 		}else{
-			beego.Error(err)
+			utils.Error(err)
+			break
 		}
 	}
 	c.Data["json"] = ""
+	c.ServeJSON()
+}
+
+func (c *ServerController)Upload(){
+	file, header, er := c.GetFile("file") // where <<this>> is the controller and <<file>> the id of your form field
+    if er != nil {
+        // get the filename
+     	beego.Error(er)   
+        
+    }else{
+    	fileName := header.Filename
+    	// save to server
+    	beego.Info(fileName)
+    	beego.Info(file)
+    	c.SaveToFile("file", "F://file.md")
+    }
+    c.Data["json"] = ""
 	c.ServeJSON()
 }
