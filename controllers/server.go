@@ -6,6 +6,7 @@ import (
 	//"net/http"
 	//"encoding/json"
 	"test_proj/chatRoom/ws"
+	"test_proj/chatRoom/myfile"
 	"test_proj/chatRoom/mymsg"
 	"test_proj/chatRoom/utils"
 	"test_proj/chatRoom/models"
@@ -164,18 +165,32 @@ func (c *ServerController) WS() {
 }
 
 func (c *ServerController)Upload(){
-	file, header, er := c.GetFile("file") // where <<this>> is the controller and <<file>> the id of your form field
+	name := c.Ctx.Request.Form.Get("name")
+	_, header, er := c.GetFile("file") // where <<this>> is the controller and <<file>> the id of your form field
     if er != nil {
         // get the filename
-     	beego.Error(er)   
+     	beego.Error(er)
+     	c.Data["json"] = ""
+		c.ServeJSON()
+		return   
         
-    }else{
-    	fileName := header.Filename
-    	// save to server
-    	beego.Info(fileName)
-    	beego.Info(file)
-    	c.SaveToFile("file", "F://file.md")
     }
+    fileName := header.Filename
+    // save to server
+    beego.Info(fileName)
+    //beego.Info(file)
+    file_path, addr := myfile.GetPathAddr(fileName)
+    err := c.SaveToFile("file", file_path)
+    if err != nil{
+    	beego.Error(err)
+    	c.Data["json"] = ""
+		c.ServeJSON()
+		return
+    }
+    beego.Info(name)
+    beego.Info(myfile.Statfile_path)
+    man := ws.GetInst()
+    man.OnUpload(name, fileName, file_path, addr)
     c.Data["json"] = ""
 	c.ServeJSON()
 }

@@ -135,3 +135,12 @@ func(man*Manager)onMsg(msg *Message){
 		client.OnFromManager(msg)
 	}
 }
+
+func(man*Manager)OnUpload(name string, ori_filename string, file_path string, addr string){
+	var msg Message
+	msg.Name = name
+	msg.Type = 4
+	msg.Content = fmt.Sprintf("%s uploaded a file.", name)
+	msg.Related = ori_filename + ";"+ file_path + ";"+addr
+	man.Msgs <- &msg
+}

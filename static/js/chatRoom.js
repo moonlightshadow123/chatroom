@@ -1,4 +1,5 @@
 // ############################ Global variables, select by id
+var base_url = window.location.origin;
 var $window = $(window);
 var $msgContainer = $('#msgContainer');       // 消息显示的区域
 var $inputArea = $('#inputArea');           // 输入消息的区域
@@ -33,6 +34,7 @@ function genMsgDiv(data){
     var msg = data.message;
     var date = data.date;
     var id = data.id;
+    var related = data.related;
 
     // type为0表示有人发消息
     var msgDiv;
@@ -47,9 +49,20 @@ function genMsgDiv(data){
         var $dateColDiv = $(dateColDiv_str).append($(dateSpan_str).text(date));
         // MsgDiv
         $msgDiv = $(msgDiv_str).addClass("msgDiv").attr("data-id", id.toString()).append($usrColDiv, $msgColDiv, $dateColDiv);
-    }
-    // type为1或2表示有人加入或退出
-    else {
+    }else if(type == 4){ // type 4 file upload
+        var file_related = related.split(";");
+        var ori_filename = file_related[0];
+        var filepath = file_related[1];
+        var addr = base_url+file_related[2]
+        var $a = $('<a target="_blank">').attr("href", addr).text(ori_filename);
+
+        var $cltColDiv = $(cltColDiv_str).append($(cltinfoSpan_str).text(msg).append($a));
+        // DateColDiv
+        var $dateColDiv = $(dateColDiv_str).append($(dateSpan_str).text(date));
+        // MsgDiv
+        $msgDiv = $(msgDiv_str).attr("id", id.toString()).append($cltColDiv, $dateColDiv);
+
+    }else{ //type 1 join, type 2 leave, type 3 recall
         // cltColDiv
         var $cltColDiv = $(cltColDiv_str).append($(cltinfoSpan_str).text(msg));
         // DateColDiv
@@ -90,8 +103,8 @@ function getHistroyList(num){
         msglist = data["msglist"];
         msglist.forEach(function(msg){ 
             $msgDiv = genMsgDiv(msg)
-            $("#msgContainer").append($msgDiv);
-            //$("#msgContainer").children(':eq(0)').after($msgDiv);
+            //$("#msgContainer").append($msgDiv);
+            $msgContainer.children(':eq(0)').before($msgDiv);
         });
     });
 }
@@ -130,8 +143,8 @@ function sendFile(){
     if($fileInput[0].files.length ==0){
         return
     }
-    alert("submit!");
     $fileForm.submit();
+    $fileInput[0].value = "";
 }
 
 function recallMsg(id){
