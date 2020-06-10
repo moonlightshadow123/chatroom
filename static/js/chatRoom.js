@@ -47,6 +47,7 @@ function genMsgDiv(data){
         var marked_str = marked(msg);
         var $msgColDiv = $(msgColDiv_str).append($(msgbodySpan_str).html(marked_str));
         $msgColDiv.find("a").attr("target", "_blank");
+        $msgColDiv.find("img").attr("width", "100%");
         // DateColDiv
         var $dateColDiv = $(dateColDiv_str).append($(dateSpan_str).text(date));
         // MsgDiv
