@@ -22,7 +22,7 @@ var usernameSpan_str    = '<span style="margin-right: 15px;font-weight: 700;over
 var msgColDiv_str       = '<div class="col-9"/>';
 var msgbodySpan_str     = '<p style="color: gray;font-size:20px; display: block;word-wrap: break-word;"/>';
 
-var cltColDiv_str       = '<div class="col-10" style="text-align:right"/>'
+var cltColDiv_str       = '<div class="col-10" style="text-align:right"/>';
 var cltinfoSpan_str     = '<span style="color:#999999;font-size:small">';
 
 var dateColDiv_str      = '<div class="col-2" style="text-align:right"/>';
@@ -44,7 +44,9 @@ function genMsgDiv(data){
         $usernameSpan.css('color', getUsernameColor(name));
         var $usrColDiv = $(usrColDiv_str).append($usernameSpan);
         // MsgColDiv
-        var $msgColDiv = $(msgColDiv_str).append($(msgbodySpan_str).text(msg));
+        var marked_str = marked(msg);
+        var $msgColDiv = $(msgColDiv_str).append($(msgbodySpan_str).html(marked_str));
+        $msgColDiv.find("a").attr("target", "_blank");
         // DateColDiv
         var $dateColDiv = $(dateColDiv_str).append($(dateSpan_str).text(date));
         // MsgDiv
@@ -190,7 +192,7 @@ $(function() {
 
     //========================发送消息==========================
     // 当回车键敲下
-    $window.keydown(function (event) {
+    /*$window.keydown(function (event) {
         event.preventDefault();
         // 13是回车的键位
         if (event.which === 13) {
@@ -198,7 +200,7 @@ $(function() {
             sendFile();
             //typing = false;
         }
-    });
+    });*/
 
     // 发送按钮点击事件
     $sendBtn.click(function () {
@@ -207,9 +209,9 @@ $(function() {
     });
 
     // suppress the right-click menu
-    $($msgContainer).on('contextmenu', 'div.msgDiv', function(evt) {
+    /*$($msgContainer).on('contextmenu', 'div.msgDiv', function(evt) {
         evt.preventDefault();
-    });
+    });*/
 
     $($msgContainer).on('mouseup', 'div.msgDiv', function(evt) {
       if (evt.which === 3) { // right-click
