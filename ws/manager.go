@@ -143,4 +143,14 @@ func(man*Manager)OnUpload(name string, ori_filename string, file_path string, ad
 	msg.Content = fmt.Sprintf("%s uploaded a file.", name)
 	msg.Related = ori_filename + ";"+ file_path + ";"+addr
 	man.Msgs <- &msg
+	fmt.Println("THE FILE =", ori_filename, "Addr = ", addr)
+	// if it is a img
+	if(utils.IsImg(ori_filename)){
+		var msg_img Message
+		msg_img.Name = name
+		msg_img.Type = 0
+		msg_img.Content = fmt.Sprintf("![img](%s)", addr)
+		man.Msgs <- &msg_img
+	}
+
 }
