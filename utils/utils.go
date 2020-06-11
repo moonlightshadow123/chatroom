@@ -2,6 +2,7 @@ package utils
 
 import(
 	"github.com/astaxie/beego"
+	"strings"
 )
 
 func Error(errs...interface{}){
