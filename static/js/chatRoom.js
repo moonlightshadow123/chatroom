@@ -128,7 +128,8 @@ function onRecieve(event){
     }
 
     $msgContainer.append($msgDiv);
-    $msgContainer[0].scrollTop = $msgContainer[0].scrollHeight;   // 让屏幕滚动
+        // scroll
+        $msgContainer.parent()[0].scrollTop = $msgContainer.parent()[0].scrollHeight;   // 让屏幕滚动
 }
 
 function sendMessage (){
