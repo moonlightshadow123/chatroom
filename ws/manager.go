@@ -149,8 +149,18 @@ func(man*Manager)OnUpload(name string, ori_filename string, file_path string, ad
 		var msg_img Message
 		msg_img.Name = name
 		msg_img.Type = 0
+		msg_img.Related = "img"
 		msg_img.Content = fmt.Sprintf("![img](%s)", addr)
 		man.Msgs <- &msg_img
+	}
+	// if it is a vedio
+	if(utils.IsVideo(ori_filename)){
+		var msg_vid Message
+		msg_vid.Name = name
+		msg_vid.Type = 0
+		msg_vid.Related = "video"
+		msg_vid.Content = fmt.Sprintf("%s", addr)
+		man.Msgs <- &msg_vid
 	}
 
 }

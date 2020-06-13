@@ -20,13 +20,15 @@ var usrColDiv_str       = '<div class="col-1"/>';
 var usernameSpan_str    = '<span style="margin-right: 15px;font-weight: 700;overflow: hidden;text-align: right;font-size:20px;"/>';
 
 var msgColDiv_str       = '<div class="col-9"/>';
-var msgbodySpan_str     = '<p style="color: gray;font-size:20px; display: block;word-wrap: break-word;"/>';
+var msgbodySpan_str     = '<p style="color: gray;font-size:20px; display: block;word-wrap: break-word;" width="100%"/>';
 
 var cltColDiv_str       = '<div class="col-10" style="text-align:right"/>';
 var cltinfoSpan_str     = '<span style="color:#999999;font-size:small">';
 
 var dateColDiv_str      = '<div class="col-2" style="text-align:right"/>';
 var dateSpan_str        = '<span style="color: gray;font-size:small"/>';
+
+var videoDiv_str = '<video playsinline controls ><source src="/path/to/video.mp4" type="video/mp4"/></video>';
 
 function genMsgDiv(data){
     var name = data.name;
@@ -44,10 +46,24 @@ function genMsgDiv(data){
         $usernameSpan.css('color', getUsernameColor(name));
         var $usrColDiv = $(usrColDiv_str).append($usernameSpan);
         // MsgColDiv
-        var marked_str = marked(msg);
-        var $msgColDiv = $(msgColDiv_str).append($(msgbodySpan_str).html(marked_str));
+        var $msgColDiv = $(msgColDiv_str);
+        var $msgbodySpan = $(msgbodySpan_str);
+        if(related == "video"){
+            $video = $(videoDiv_str);
+            $video.find("source").attr("src", msg);
+            $msgbodySpan.append($video);
+            $msgColDiv.css("text-align", "center");
+        }else if(related == "img"){
+            $msgbodySpan.html(marked(msg));
+            $msgColDiv.css("text-align", "center");
+        }else{
+            var marked_str = marked(msg);
+            $msgbodySpan.html(marked_str);
+        }
+        $msgColDiv.append($msgbodySpan)
         $msgColDiv.find("a").attr("target", "_blank");
-        $msgColDiv.find("img").attr("width", "100%");
+        $msgColDiv.find("img").css("max-width", "100%");
+        $msgColDiv.find("video").css("max-width", "100%");
         // DateColDiv
         var $dateColDiv = $(dateColDiv_str).append($(dateSpan_str).text(date));
         // MsgDiv
@@ -128,8 +144,8 @@ function onRecieve(event){
     }
 
     $msgContainer.append($msgDiv);
-        // scroll
-        $msgContainer.parent()[0].scrollTop = $msgContainer.parent()[0].scrollHeight;   // 让屏幕滚动
+    // scroll
+    $msgContainer.parent()[0].scrollTop = $msgContainer.parent()[0].scrollHeight;   // 让屏幕滚动
 }
 
 function sendMessage (){
